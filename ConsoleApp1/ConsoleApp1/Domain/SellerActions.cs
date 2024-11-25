@@ -23,5 +23,13 @@ namespace ConsoleApp1.Domain
             Console.WriteLine($"\nProdavac uspjesno registriran!\n\n Ime: {sellerName}\n Email: {sellerEmail}\n");
             return new Seller(sellerName, sellerEmail);
         }
+
+        public static void AddSaleIncome(Seller seller,double price)
+        {
+            price = price*0.95;
+
+            seller.AddIncome(price);
+
+        }
     }
 }

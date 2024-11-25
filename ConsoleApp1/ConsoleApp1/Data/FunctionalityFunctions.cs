@@ -29,44 +29,64 @@ namespace ConsoleApp1.Data
             return true;
         }
 
-        public static Buyer CheckIfIsBuyer(Marketplace marketplace, string email) { 
+        public static void ChooseUserType(Marketplace marketplace) {
+
             
-            foreach(var buyer in marketplace.buyers)
+            var option = 0;
+            while (true)
             {
-                if (buyer.email == email) {
-                    return buyer;
+                Console.WriteLine("\n1 - Registracija kao kupac\n2 - Registracija kao prodavac\n3 - Povratak na pocetni izbornik");
+                Console.Write("\nUnos: ");
+                int.TryParse(Console.ReadLine(), out option);
+
+                switch (option) {
+                    case 1:
+                        Buyer buyer = BuyerActions.BuyerRegistration(marketplace);
+                        if (buyer == null)
+                        {
+                            Console.WriteLine("Registracija nije uspjela");
+                            return;
+                        }
+                        marketplace.buyers.Add(buyer);
+                        Console.WriteLine("Kupac uspjesno registriran");
+                        return;
+                    case 2:
+                        Seller seller = SellerActions.SellerRegistration(marketplace);
+                        if (seller == null)
+                        {
+                            Console.WriteLine("Registracija nije uspjela");
+                            return;
+                        }
+                        marketplace.sellers.Add(seller);
+                        Console.WriteLine("Prodavac uspjesno registriran");
+                        return;
+                    case 3:
+                        return;
+                    default:
+                        Console.WriteLine("Pogresan unos, pokusajte ponovno");
+                        break;
                 }
             }
+        }
 
-            return null;
+        public static Buyer CheckIfIsBuyer(Marketplace marketplace, string email) {
+
+            return marketplace.buyers.FirstOrDefault(buyer => buyer.email == email);
         }
 
         public static Seller CheckIfIsSeller(Marketplace marketplace, string email)
         {
 
-            foreach (var seller in marketplace.sellers)
-            {
-                if (seller.email == email)
-                {
-                    return seller;
-                }
-            }
-
-            return null;
+            return marketplace.sellers.FirstOrDefault(seller => seller.email == email);
         }
 
         public static bool CheckIfEmailAlreadyExists(string email, Marketplace marketplace) {
 
-            if (CheckIfIsSeller(marketplace, email) != null)
-            {
-                return true;
-            }
-            else if (CheckIfIsBuyer(marketplace, email) != null)
-            {
-                return true;
-            }
+            bool emailExistsAsBuyer = marketplace.buyers.Any(buyer => buyer.email == email);
 
-            return false;
+            bool emailExistsAsSeller = marketplace.sellers.Any(seller => seller.email == email);
+
+            return emailExistsAsBuyer || emailExistsAsSeller;
 
         }
 

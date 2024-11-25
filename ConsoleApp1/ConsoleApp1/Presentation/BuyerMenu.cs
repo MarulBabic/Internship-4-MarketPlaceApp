@@ -23,7 +23,10 @@ namespace ConsoleApp1.Presentation
                 {
                     case 1:
                         ProductActions.ShowAllAvailableProducts(marketplace);
-                        return;
+                        break;
+                    case 2:
+                        ProductActions.BuyProduct(marketplace,buyer);
+                        break;
                     default:
                         Console.WriteLine("Pogresan unos, pokusajte ponovo");
                         break;

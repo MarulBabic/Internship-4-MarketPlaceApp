@@ -13,5 +13,11 @@ namespace ConsoleApp1.Domain
         {
             this.balance = balance;
         }
+
+        public void SetBalance(double price)
+        {
+            balance += price;
+            Console.WriteLine($"\nKupcev racun umanjen za: {-price}. Ukupan iznos na racunu: {balance:F2}");
+        }
     }
 }

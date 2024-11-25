@@ -25,5 +25,10 @@ namespace ConsoleApp1.Domain
             Console.WriteLine($"\nKupac uspjesno registriran!\n\n Ime: {buyerName}\n Email: {buyerEmail}\n Pocetno stanje: {balance:F2}\n");
             return new Buyer(buyerName,buyerEmail, balance);
         }
+
+        public static void DeductAmount(Buyer buyer,double price)
+        {
+            buyer.SetBalance(-price);
+        }
     }
 }
