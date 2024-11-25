@@ -16,7 +16,7 @@ namespace ConsoleApp1.Domain
         public void AddIncome(double amount)
         {
             income += amount;
-            Console.WriteLine($"\nProdavacev racun povecan za: {amount}. Ukupan iznos na racunu: {income:F2}");
+            Console.WriteLine($"\nUkupan iznos na prodavacevom racunu: {income:F2}");
         }
     }
 }

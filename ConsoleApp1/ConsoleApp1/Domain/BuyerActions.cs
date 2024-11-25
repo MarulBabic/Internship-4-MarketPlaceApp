@@ -29,6 +29,13 @@ namespace ConsoleApp1.Domain
         public static void DeductAmount(Buyer buyer,double price)
         {
             buyer.SetBalance(-price);
+            Console.WriteLine($"\nKupcev racun umanjen je za {price:F2}");
+        }
+
+        public static void ReturnAmount(Buyer buyer, double price)
+        {
+            buyer.SetBalance(price);
+            Console.WriteLine($"\nKupcev racun uvecan je za {price:F2}");
         }
     }
 }

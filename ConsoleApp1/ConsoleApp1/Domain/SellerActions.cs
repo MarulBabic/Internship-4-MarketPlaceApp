@@ -29,7 +29,14 @@ namespace ConsoleApp1.Domain
             price = price*0.95;
 
             seller.AddIncome(price);
+            Console.WriteLine($"\nProdavacev racun uvecan za {price}");
 
+        }
+
+        public static void DeductSaleIncome(Seller seller,double price)
+        {
+            seller.AddIncome(-price);
+            Console.WriteLine($"\nProdavacev racun umanjen za {price}");
         }
     }
 }

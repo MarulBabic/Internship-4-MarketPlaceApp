@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleApp1.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,9 @@ namespace ConsoleApp1.Presentation
 {
     public class SellerMenu
     {
+        public static void ViewSellerMenu(Marketplace  marketplace, Seller seller)
+        {
+
+        }
     }
 }

@@ -68,7 +68,7 @@ namespace ConsoleApp1.Domain
 
             if (seller != null)
             {
-
+                SellerMenu.ViewSellerMenu(marketplace, seller);
                 return;
             }
 

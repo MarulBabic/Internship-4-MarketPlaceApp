@@ -26,7 +26,6 @@ namespace ConsoleApp1
             marketplace.products.Add(product2);
             marketplace.products.Add(product3);
 
-            ProductActions.BuyProduct(marketplace, buyer1);
 
             HomeMenu.ViewHomeMenu(marketplace);
         }

@@ -19,6 +19,51 @@ namespace ConsoleApp1.Domain
             }
         }
 
+        public static bool ShowAllPurchasedProducts(Marketplace marketplace, Buyer buyer) {
+            Console.WriteLine("\nKupljeni proizvodi:");
+
+            var purchasedProducts = marketplace.transactions
+                .Where(t => t.buyer == buyer)
+                .Select(t => marketplace.products.FirstOrDefault(p => p.GetId() == t.productId && p.status == Data.Status.Prodano))
+                .Where(p => p != null)
+                .Distinct()
+                .ToList();
+
+            if (!purchasedProducts.Any())
+            {
+                Console.WriteLine("\nNemate kupljenih proizvoda za povrat.");
+                return false;
+            }
+
+            foreach (var product in purchasedProducts)
+            {
+                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
+                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}");
+            }
+            return true;
+        }
+
+        public static void ReturnProduct(Marketplace marketplace, Buyer buyer) {
+           if(!ShowAllPurchasedProducts(marketplace, buyer)) 
+            {
+                return;
+            }
+
+            var productToReturn = ChooseProduct(marketplace);
+
+            while(productToReturn == null || productToReturn.status != Data.Status.Prodano)
+            {
+                Console.WriteLine("\nNeispravan unos ili proizvod nije kupljen.");
+                ShowAllPurchasedProducts(marketplace, buyer);
+                productToReturn = ChooseProduct(marketplace);
+            }
+
+            BuyerActions.ReturnAmount(buyer,productToReturn.price);
+            SellerActions.DeductSaleIncome(productToReturn.seller, productToReturn.price);
+            productToReturn.status = Data.Status.Na_prodaju;
+            Console.WriteLine($"\nProizvod '{productToReturn.productName}' je uspješno vraćen.");
+        }
+
         public static void BuyProduct(Marketplace marketplace, Buyer buyer)
         {
 

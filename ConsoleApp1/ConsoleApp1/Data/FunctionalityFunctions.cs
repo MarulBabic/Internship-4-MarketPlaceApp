@@ -1,4 +1,5 @@
 ﻿using ConsoleApp1.Domain;
+using ConsoleApp1.Presentation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace ConsoleApp1.Data
             return true;
         }
 
+
         public static void ChooseUserType(Marketplace marketplace) {
 
             
@@ -44,26 +46,28 @@ namespace ConsoleApp1.Data
                         Buyer buyer = BuyerActions.BuyerRegistration(marketplace);
                         if (buyer == null)
                         {
-                            Console.WriteLine("Registracija nije uspjela");
+                            Console.WriteLine("\nRegistracija nije uspjela");
                             return;
                         }
                         marketplace.buyers.Add(buyer);
-                        Console.WriteLine("Kupac uspjesno registriran");
+                        Console.WriteLine("\nKupac uspjesno registriran");
+                        BuyerMenu.ViewBuyerMenu(marketplace, buyer);
                         return;
                     case 2:
                         Seller seller = SellerActions.SellerRegistration(marketplace);
                         if (seller == null)
                         {
-                            Console.WriteLine("Registracija nije uspjela");
+                            Console.WriteLine("\nRegistracija nije uspjela");
                             return;
                         }
                         marketplace.sellers.Add(seller);
-                        Console.WriteLine("Prodavac uspjesno registriran");
+                        Console.WriteLine("\nProdavac uspjesno registriran");
+                        SellerMenu.ViewSellerMenu(marketplace,seller);
                         return;
                     case 3:
                         return;
                     default:
-                        Console.WriteLine("Pogresan unos, pokusajte ponovno");
+                        Console.WriteLine("\nPogresan unos, pokusajte ponovno");
                         break;
                 }
             }
