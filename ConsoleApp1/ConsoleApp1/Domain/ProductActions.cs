@@ -43,6 +43,42 @@ namespace ConsoleApp1.Domain
             return true;
         }
 
+        public static void ShowAllFavorites(Buyer buyer)
+        {
+            if (!buyer.favorites.Any())
+            {
+                Console.WriteLine("\nLista favorita je prazna.");
+                return;
+            }
+
+            Console.WriteLine("\nVasi omiljeni proizvodi:");
+            foreach (var product in buyer.favorites)
+            {
+                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
+                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}");
+            }
+        }
+
+        public static void AddToFavorites(Marketplace marketplace, Buyer buyer)
+        {
+            if (!ShowAllPurchasedProducts(marketplace, buyer))
+            {
+                return;
+            }
+
+            Console.WriteLine("\nOdaberite proizvod koji zelite dodati u favorite:");
+            var productToAdd = ChooseProduct(marketplace);
+
+            while(productToAdd == null || productToAdd.status != Data.Status.Prodano)
+            {
+                Console.WriteLine("\nNe mozete dodati nevazeci proizvod ili proizvod koji nije kupljen u favorite.");
+                productToAdd = ChooseProduct(marketplace);
+            }
+
+            buyer.AddToFavorites(productToAdd);
+
+        }
+
         public static void ReturnProduct(Marketplace marketplace, Buyer buyer) {
            if(!ShowAllPurchasedProducts(marketplace, buyer)) 
             {

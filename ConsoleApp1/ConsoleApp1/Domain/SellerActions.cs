@@ -35,6 +35,8 @@ namespace ConsoleApp1.Domain
 
         public static void DeductSaleIncome(Seller seller,double price)
         {
+            price = price * 0.95;
+
             seller.AddIncome(-price);
             Console.WriteLine($"\nProdavacev racun umanjen za {price}");
         }

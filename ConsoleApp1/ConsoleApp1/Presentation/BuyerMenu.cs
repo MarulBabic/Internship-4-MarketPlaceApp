@@ -31,6 +31,15 @@ namespace ConsoleApp1.Presentation
                     case 3:
                         ProductActions.ReturnProduct(marketplace,buyer);
                         break;
+                    case 4:
+                        ProductActions.AddToFavorites(marketplace, buyer);
+                        break;
+                    case 5:
+                        ProductActions.ShowAllPurchasedProducts(marketplace, buyer);
+                        break;
+                    case 6:
+                        ProductActions.ShowAllFavorites(buyer);
+                        break;
                     case 7:
                         return;
                     default:
