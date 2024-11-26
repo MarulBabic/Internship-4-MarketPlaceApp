@@ -20,7 +20,7 @@ namespace ConsoleApp1
 
             Product product1 = new Product("mobitel", "novi mobitel", 1200, Data.Category.Elektronika, seller1);
             Product product2 = new Product("televizija", "novi tv", 500, Data.Category.Elektronika, seller1);
-            Product product3 = new Product("laptop", "novi laptop", 800, Data.Category.Elektronika, seller2);
+            Product product3 = new Product("laptop", "novi laptop", 800, Data.Category.Elektronika, seller1);
 
             marketplace.products.Add(product1);
             marketplace.products.Add(product2);

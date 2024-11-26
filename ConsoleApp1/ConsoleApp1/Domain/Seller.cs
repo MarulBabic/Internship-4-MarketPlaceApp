@@ -16,7 +16,11 @@ namespace ConsoleApp1.Domain
         public void AddIncome(double amount)
         {
             income += amount;
-            Console.WriteLine($"\nUkupan iznos na prodavacevom racunu: {income:F2}");
+        }
+
+        public double GetIncome()
+        {
+            return income;
         }
     }
 }

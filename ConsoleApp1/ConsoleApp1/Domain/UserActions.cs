@@ -45,7 +45,7 @@ namespace ConsoleApp1.Domain
             do
             {
                 Console.Write("\nUnos: ");
-                email = Console.ReadLine();
+                email = Console.ReadLine().Trim();
 
             } while (!FunctionalityFunctions.CheckIsValidEmail(email));
 

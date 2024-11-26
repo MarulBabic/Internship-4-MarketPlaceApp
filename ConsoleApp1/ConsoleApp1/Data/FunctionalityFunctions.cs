@@ -11,6 +11,70 @@ namespace ConsoleApp1.Data
 {
     public class FunctionalityFunctions
     {
+
+        public static bool GetDateFromUser(out DateTime date)
+        {
+            date = DateTime.MinValue;
+
+            bool isValidDate = false;
+
+            Console.WriteLine("\nUnesite datum (dd.MM.yyyy.): ");
+            while (!isValidDate)
+            {
+                Console.Write("\nUnos: ");
+                string input = Console.ReadLine();
+
+                isValidDate = DateTime.TryParseExact(input, "dd.MM.yyyy.",
+                                                      System.Globalization.CultureInfo.InvariantCulture,
+                                                      System.Globalization.DateTimeStyles.None, out date);
+
+                if (!isValidDate)
+                {
+                    Console.WriteLine("Neispravan unos datuma. Molimo unesite datum u formatu dd.MM.yyyy.");
+                }
+            }
+
+            return true;
+        }
+
+        public static bool ValidateCategory(string categoryInput, out Category category)
+        {
+            if (Enum.TryParse(categoryInput, true, out category))
+            {
+                return true; 
+            }
+
+            Console.WriteLine("\nNeispravan unos kategorije. Pokušajte ponovo (Elektronika, Odjeća, Knjige ili Namještaj).");
+            return false;
+        }
+
+        public static bool ValidateProductName(string productName)
+        {
+            if (string.IsNullOrEmpty(productName)) {
+                Console.WriteLine("\nNaziv proizvoda ne može biti prazan.");
+                return false;
+            }
+
+            if (productName.Length < 3)
+            {
+                Console.WriteLine("\nNaziv proizvoda mora biti barem 3 znaka.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool ValidateProductDesc(string productDesc)
+        {
+            if (string.IsNullOrWhiteSpace(productDesc))
+            {
+                Console.WriteLine("\nOpis proizvoda ne može biti prazan.");
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool CheckIsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))

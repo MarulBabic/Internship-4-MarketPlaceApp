@@ -15,8 +15,8 @@ namespace ConsoleApp1.Data
     public enum Category
     {
         Elektronika,
-        Odjeća,
+        Odjeca,
         Knjige,
-        Namještaj
+        Namjestaj
     }
 }
