@@ -12,6 +12,7 @@ namespace ConsoleApp1.Domain
         public List<Buyer> buyers = new List<Buyer>();
         public List<Product> products = new List<Product>();
         public List<Transaction> transactions = new List<Transaction>();
+        public List<PromoCode> promoCodes = new List<PromoCode>();
         public double totalFunds {  get; set; }
 
         public Marketplace()
@@ -20,6 +21,7 @@ namespace ConsoleApp1.Domain
             buyers = new List<Buyer>();
             products = new List<Product>();
             transactions = new List<Transaction>();
+            promoCodes = new List<PromoCode>();
             totalFunds = 0.0;
         }
     }

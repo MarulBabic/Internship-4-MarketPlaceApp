@@ -34,5 +34,10 @@ namespace ConsoleApp1.Domain
         {
             return id;
         }
+
+        public void SetPrice(double price)
+        {
+            this.price = price;
+        }
     }
 }

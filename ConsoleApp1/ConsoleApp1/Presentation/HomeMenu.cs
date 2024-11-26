@@ -17,7 +17,7 @@ namespace ConsoleApp1.Presentation
             do
             {
                 Console.WriteLine("\n1 - Registracija novog korisnika\n2 - Prijava vec postojeceg korisnika\n3 - Prikaz svih transakcija" +
-               "\n4 - Izlaz iz aplikacije");
+               "\n4 - Prikaz proizvoda po kategoriji\n5 - Izlaz iz aplikacije");
                 Console.Write("\nUnos: ");
                 int.TryParse(Console.ReadLine(), out option);
                 switch (option)
@@ -32,6 +32,9 @@ namespace ConsoleApp1.Presentation
                         TransactionActions.ViewAllTransactions(marketplace);
                         break;
                     case 4:
+                        ProductActions.ShowProductsByCategory(marketplace);
+                        break;
+                    case 5:
                         return;
                     default:
                         Console.WriteLine("Pogresan unos, pokusajte ponovo");

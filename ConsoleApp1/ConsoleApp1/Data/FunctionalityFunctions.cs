@@ -18,19 +18,19 @@ namespace ConsoleApp1.Data
 
             bool isValidDate = false;
 
-            Console.WriteLine("\nUnesite datum (dd.MM.yyyy.): ");
+            Console.WriteLine("\nUnesite datum (dd-MM-yyyy): ");
             while (!isValidDate)
             {
                 Console.Write("\nUnos: ");
                 string input = Console.ReadLine();
 
-                isValidDate = DateTime.TryParseExact(input, "dd.MM.yyyy.",
+                isValidDate = DateTime.TryParseExact(input, "dd-MM-yyyy",
                                                       System.Globalization.CultureInfo.InvariantCulture,
                                                       System.Globalization.DateTimeStyles.None, out date);
 
                 if (!isValidDate)
                 {
-                    Console.WriteLine("Neispravan unos datuma. Molimo unesite datum u formatu dd.MM.yyyy.");
+                    Console.WriteLine("Neispravan unos datuma. Molimo unesite datum u formatu dd-MM-yyyy");
                 }
             }
 

@@ -24,6 +24,49 @@ namespace ConsoleApp1.Domain
             return new Seller(sellerName, sellerEmail);
         }
 
+        public static void ChangeProductPrice(Seller seller, Marketplace marketplace)
+        {
+            Console.WriteLine("\nProizvodi u vlasništvu prodavača:");
+            var sellerProducts = marketplace.products.Where(p => p.seller == seller && p.status == Data.Status.Na_prodaju).ToList();
+
+            if (!sellerProducts.Any())
+            {
+                Console.WriteLine("\nNemate proizvoda u prodaji.");
+                return;
+            }
+
+            foreach (var product in sellerProducts)
+            {
+                Console.WriteLine($"\nID: {product.GetId()} | Naziv: {product.productName} | Trenutna cijena: {product.price:F2}");
+            }
+
+            Console.WriteLine("\nOdaberite proizvod kojem želite promijeniti cijenu:\n");
+            Product selectedProduct = null;
+
+            while (selectedProduct == null || selectedProduct.seller != seller || selectedProduct.status != Data.Status.Na_prodaju)
+            {
+                selectedProduct = ProductActions.ChooseProduct(marketplace);
+
+                if (selectedProduct == null || selectedProduct.seller != seller || selectedProduct.status != Data.Status.Na_prodaju)
+                {
+                    Console.WriteLine("\nNeispravan odabir. Molimo odaberite proizvod iz vašeg vlasništva koji je u prodaji.");
+                }
+            }
+
+            Console.WriteLine($"\nOdabrali ste proizvod: {selectedProduct.productName}, trenutna cijena: {selectedProduct.price:F2}");
+            Console.WriteLine("\nUnesite novu cijenu:");
+
+            double newPrice;
+            Console.Write("\nUnos: ");
+            while (!double.TryParse(Console.ReadLine(), out newPrice) || newPrice <= 0)
+            {
+                Console.WriteLine("\nNeispravna cijena. Unesite pozitivan broj.");
+            }
+
+            selectedProduct.SetPrice(newPrice);
+            Console.WriteLine($"Cijena proizvoda '{selectedProduct.productName}' uspješno promijenjena na {newPrice:F2}.");
+        }
+
         public static void ShowTotalSalesIncome(Seller seller) {
             Console.WriteLine($"\nUkupna zarada od prodaje za prodavaca {seller.name} iznosi: {seller.GetIncome():F2}");
         }

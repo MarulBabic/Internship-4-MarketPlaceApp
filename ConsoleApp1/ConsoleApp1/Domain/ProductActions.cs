@@ -46,33 +46,57 @@ namespace ConsoleApp1.Domain
 
         public static void ShowProductsOfSellerByCategory(Marketplace marketplace, Seller seller)
         {
-            Console.WriteLine("\nOdaberite kategoriju proizvoda (Elektronika, Odjeća, Knjige, Namještaj):");
+            var products = GetProductsByCategory(marketplace, seller);
 
-            Category selectedCategory;
-
-            Console.Write("\nUnos: ");
-            while (!FunctionalityFunctions.ValidateCategory(Console.ReadLine(), out selectedCategory))
+            if (!products.Any())
             {
-                Console.Write("\nUnos: ");
-            }
-
-            var productsOfCategory = marketplace.products
-             .Where(p => p.seller == seller && p.category == selectedCategory)
-             .ToList();
-
-            if (!productsOfCategory.Any())
-            {
-                Console.WriteLine($"\nProdavac {seller.name} nema proizvoda u kategoriji {selectedCategory}.");
+                Console.WriteLine($"\nProdavač {seller.name} nema proizvoda u odabranoj kategoriji.");
                 return;
             }
 
-            Console.WriteLine($"\nProizvodi prodavaca {seller.name} u kategoriji {selectedCategory}:");
-            foreach (var product in productsOfCategory)
+            Console.WriteLine($"\nProizvodi prodavača {seller.name} u odabranoj kategoriji:");
+            foreach (var product in products)
             {
                 Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
                                   $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
                                   $"\n Status: {product.status}");
             }
+        }
+
+        public static void ShowProductsByCategory(Marketplace marketplace)
+        {
+            var products = GetProductsByCategory(marketplace);
+
+            if (!products.Any())
+            {
+                Console.WriteLine("\nNema proizvoda u odabranoj kategoriji.");
+                return;
+            }
+
+            Console.WriteLine("\nProizvodi u odabranoj kategoriji:");
+            foreach (var product in products)
+            {
+                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
+                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
+                                  $"\n Prodavač: {product.seller.name}\n Status: {product.status}");
+            }
+        }
+
+        public static List<Product> GetProductsByCategory(Marketplace marketplace, Seller seller = null)
+        {
+            Console.WriteLine("\nOdaberite kategoriju proizvoda (Elektronika, Odjeca, Knjige, Namjestaj):");
+
+            Category selectedCategory;
+
+            Console.Write("\nUnos: ");
+            while (!FunctionalityFunctions.ValidateCategory(Console.ReadLine(), out selectedCategory))
+            {;
+                Console.Write("\nUnos: ");
+            }
+
+            return marketplace.products
+                .Where(p => p.category == selectedCategory && (seller == null || p.seller == seller))
+                .ToList();
         }
 
         public static void ShowAllProductsOfSeller(Marketplace marketplace, Seller seller) {
@@ -154,20 +178,35 @@ namespace ConsoleApp1.Domain
 
             var product = ChooseProduct(marketplace);
 
-            if(buyer.balance < product.price)
+            Console.Write("\nUnesite promotivni kod (ili pritisnite Enter za nastavak bez koda): ");
+            string promoCode = Console.ReadLine();
+
+            double finalPrice = product.price;
+
+            if (!string.IsNullOrWhiteSpace(promoCode))
             {
-                Console.WriteLine("\nNemate dovoljno novaca na racunu");
+                finalPrice = PromoCodeActions.ApplyPromotionalCode(product, promoCode, marketplace);
+            }
+
+            if (finalPrice == -1)
+            {
+                Console.WriteLine("\nKupnja je otkazana. Vracate se na pocetni izbornik.");
+                return; 
+            }
+
+            if (buyer.balance < finalPrice)
+            {
+                Console.WriteLine("\nNemate dovoljno sredstava za kupovinu ovog proizvoda.");
                 return;
             }
 
             marketplace.transactions.Add(new Transaction(product.GetId(), buyer, product.seller));
-            
-            SellerActions.AddSaleIncome(product.seller, product.price);
-            BuyerActions.DeductAmount(buyer,product.price);
-            marketplace.totalFunds += (product.price * 0.05);
+            SellerActions.AddSaleIncome(product.seller, finalPrice);
+            BuyerActions.DeductAmount(buyer, finalPrice);
+            marketplace.totalFunds += (finalPrice * 0.05);
             product.status = Data.Status.Prodano;
 
-            Console.WriteLine($"\nProizvod: {product.productName}, cijena: {product.price}, uspjesno kupljen");
+            Console.WriteLine($"\nProizvod: {product.productName}, cijena: {finalPrice}, uspjesno kupljen");
 
         }
 

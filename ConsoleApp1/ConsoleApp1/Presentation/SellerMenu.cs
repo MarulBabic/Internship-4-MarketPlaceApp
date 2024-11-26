@@ -15,7 +15,8 @@ namespace ConsoleApp1.Presentation
             do
             {
                 Console.WriteLine("\n1 - Dodajte proizvod\n2 - Pregled svih proizvoda od prodavaca\n3 - Pregled ukupne zarade" +
-                    "\n4 - Pregled prodanih proizvoda po kategoriji\n5 - Pregled zarade u odredenom vremenskom razdoblju\n6 - Povratak na pocetni izbornik");
+                    "\n4 - Pregled prodanih proizvoda po kategoriji\n5 - Pregled zarade u odredenom vremenskom razdoblju\n6 - Promjena cijene proizvoda" +
+                    "\n7 - Povratak na pocetni izbornik");
 
                 Console.Write("\nUnos: ");
                 int.TryParse(Console.ReadLine(), out option );
@@ -37,6 +38,9 @@ namespace ConsoleApp1.Presentation
                         SellerActions.ShowTotalSalesInTimePeriod(marketplace, seller);
                         break;
                     case 6:
+                        SellerActions.ChangeProductPrice(seller, marketplace);
+                        break;
+                    case 7:
                         return;
                     default:
                         Console.WriteLine("\nPogresan unos, pokusajte ponovno");
