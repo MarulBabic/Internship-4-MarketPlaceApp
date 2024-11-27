@@ -30,7 +30,7 @@ namespace ConsoleApp1.Data
 
                 if (!isValidDate)
                 {
-                    Console.WriteLine("Neispravan unos datuma. Molimo unesite datum u formatu dd-MM-yyyy");
+                    Console.WriteLine("\nNeispravan unos datuma. Molimo unesite datum u formatu dd-MM-yyyy");
                 }
             }
 
@@ -95,46 +95,66 @@ namespace ConsoleApp1.Data
         }
 
 
-        public static void ChooseUserType(Marketplace marketplace) {
-
-            
-            var option = 0;
+        public static void ChooseUserType(Marketplace marketplace)
+        {
             while (true)
             {
-                Console.WriteLine("\n1 - Registracija kao kupac\n2 - Registracija kao prodavac\n3 - Povratak na pocetni izbornik");
+                Console.WriteLine("\n1 - Registracija kao kupac\n2 - Registracija kao prodavac\n3 - Povratak na početni izbornik");
                 Console.Write("\nUnos: ");
-                int.TryParse(Console.ReadLine(), out option);
+                var option=0;
 
-                switch (option) {
+                if (!int.TryParse(Console.ReadLine(), out option))
+                {
+                    Console.WriteLine("\nNeispravan unos. Molimo unesite broj.");
+                    continue;
+                }
+
+                switch (option)
+                {
                     case 1:
-                        Buyer buyer = BuyerActions.BuyerRegistration(marketplace);
-                        if (buyer == null)
-                        {
-                            Console.WriteLine("\nRegistracija nije uspjela");
-                            return;
-                        }
-                        marketplace.buyers.Add(buyer);
-                        Console.WriteLine("\nKupac uspjesno registriran");
-                        BuyerMenu.ViewBuyerMenu(marketplace, buyer);
+                        HandleBuyerRegistration(marketplace);
                         return;
+
                     case 2:
-                        Seller seller = SellerActions.SellerRegistration(marketplace);
-                        if (seller == null)
-                        {
-                            Console.WriteLine("\nRegistracija nije uspjela");
-                            return;
-                        }
-                        marketplace.sellers.Add(seller);
-                        Console.WriteLine("\nProdavac uspjesno registriran");
-                        SellerMenu.ViewSellerMenu(marketplace,seller);
+                        HandleSellerRegistration(marketplace);
                         return;
+
                     case 3:
                         return;
+
                     default:
-                        Console.WriteLine("\nPogresan unos, pokusajte ponovno");
+                        Console.WriteLine("\nPogrešan unos, pokušajte ponovno.");
                         break;
                 }
             }
+        }
+
+        private static void HandleSellerRegistration(Marketplace marketplace)
+        {
+            Seller seller = SellerActions.SellerRegistration(marketplace);
+            if (seller == null)
+            {
+                Console.WriteLine("\nRegistracija nije uspjela.");
+                return;
+            }
+
+            MarketplaceActions.AddSeller(marketplace,seller);
+            Console.WriteLine("\nProdavač uspješno registriran.");
+            SellerMenu.ViewSellerMenu(marketplace, seller);
+        }
+
+        private static void HandleBuyerRegistration(Marketplace marketplace)
+        {
+            Buyer buyer = BuyerActions.BuyerRegistration(marketplace);
+            if (buyer == null)
+            {
+                Console.WriteLine("\nRegistracija nije uspjela.");
+                return;
+            }
+
+            MarketplaceActions.AddBuyer(marketplace, buyer);
+            Console.WriteLine("\nKupac uspješno registriran.");
+            BuyerMenu.ViewBuyerMenu(marketplace, buyer);
         }
 
         public static Buyer CheckIfIsBuyer(Marketplace marketplace, string email) {
@@ -144,7 +164,6 @@ namespace ConsoleApp1.Data
 
         public static Seller CheckIfIsSeller(Marketplace marketplace, string email)
         {
-
             return marketplace.sellers.FirstOrDefault(seller => seller.email == email);
         }
 
@@ -155,7 +174,6 @@ namespace ConsoleApp1.Data
             bool emailExistsAsSeller = marketplace.sellers.Any(seller => seller.email == email);
 
             return emailExistsAsBuyer || emailExistsAsSeller;
-
         }
 
         public static double CheckIfIsValidBalance()

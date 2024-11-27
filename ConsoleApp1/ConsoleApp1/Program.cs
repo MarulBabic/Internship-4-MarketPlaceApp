@@ -30,9 +30,9 @@ namespace ConsoleApp1
             PromoCode promo2 = new PromoCode("Winter2025", 20.0, DateTime.ParseExact("12-02-2025", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture));
             PromoCode promo3 = new PromoCode("Summer2024", 25.0, DateTime.ParseExact("12-09-2024", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture));
 
-            marketplace.promoCodes.Add(promo1);
-            marketplace.promoCodes.Add(promo2);
-            marketplace.promoCodes.Add(promo3);
+            MarketplaceActions.AddPromoCode(marketplace,promo1);
+            MarketplaceActions.AddPromoCode(marketplace, promo2);
+            MarketplaceActions.AddPromoCode(marketplace, promo3);
 
             HomeMenu.ViewHomeMenu(marketplace);
         }

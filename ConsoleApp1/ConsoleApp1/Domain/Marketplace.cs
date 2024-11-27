@@ -17,11 +17,6 @@ namespace ConsoleApp1.Domain
 
         public Marketplace()
         {
-            sellers = new List<Seller>();
-            buyers = new List<Buyer>();
-            products = new List<Product>();
-            transactions = new List<Transaction>();
-            promoCodes = new List<PromoCode>();
             totalFunds = 0.0;
         }
     }

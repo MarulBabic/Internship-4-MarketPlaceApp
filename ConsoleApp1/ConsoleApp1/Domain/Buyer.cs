@@ -8,7 +8,7 @@ namespace ConsoleApp1.Domain
 {
     public class Buyer : User
     {
-        public double balance { get; set; }
+        public double balance { get; private set; }
         public List<Product> favorites { get; private set; }
         public Buyer(string name, string email, double balance) : base(name, email)
         {
@@ -16,7 +16,7 @@ namespace ConsoleApp1.Domain
             favorites = new List<Product>();
         }
 
-        public void SetBalance(double price)
+        public void UpdateBalance(double price)
         {
             balance += price;
         }

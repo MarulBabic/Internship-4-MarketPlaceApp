@@ -11,13 +11,14 @@ namespace ConsoleApp1.Domain
     {
         public static void ShowAllAvailableProducts(Marketplace marketplace)
         {
-            var availableProducts = marketplace.products.Where(p => p.status == Data.Status.Na_prodaju);
+            var availableProducts = marketplace.products.Where(p => p.status == Data.Status.Na_prodaju).ToList();
 
-            foreach (var product in availableProducts)
+            if (!availableProducts.Any())
             {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
-                    $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}");
+                Console.WriteLine("\nNema proizvoda na prodaju.");
+                return;
             }
+            DisplayProductDetails(availableProducts);
         }
 
         public static bool ShowAllPurchasedProducts(Marketplace marketplace, Buyer buyer) {
@@ -32,15 +33,12 @@ namespace ConsoleApp1.Domain
 
             if (!purchasedProducts.Any())
             {
-                Console.WriteLine("\nNemate kupljenih proizvoda za povrat.");
+                Console.WriteLine("\nNemate kupljenih proizvoda.");
                 return false;
             }
 
-            foreach (var product in purchasedProducts)
-            {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
-                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}");
-            }
+            DisplayProductDetails(purchasedProducts);
+
             return true;
         }
 
@@ -55,12 +53,7 @@ namespace ConsoleApp1.Domain
             }
 
             Console.WriteLine($"\nProizvodi prodavača {seller.name} u odabranoj kategoriji:");
-            foreach (var product in products)
-            {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
-                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
-                                  $"\n Status: {product.status}");
-            }
+            DisplayProductDetails(products);
         }
 
         public static void ShowProductsByCategory(Marketplace marketplace)
@@ -74,12 +67,7 @@ namespace ConsoleApp1.Domain
             }
 
             Console.WriteLine("\nProizvodi u odabranoj kategoriji:");
-            foreach (var product in products)
-            {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
-                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
-                                  $"\n Prodavač: {product.seller.name}\n Status: {product.status}");
-            }
+            DisplayProductDetails(products);
         }
 
         public static List<Product> GetProductsByCategory(Marketplace marketplace, Seller seller = null)
@@ -102,13 +90,14 @@ namespace ConsoleApp1.Domain
         public static void ShowAllProductsOfSeller(Marketplace marketplace, Seller seller) {
             Console.WriteLine($"\nProizvodi od prodavaca {seller.name}:");
 
-            var filteredProducts = marketplace.products.Where(p => p.seller == seller);
 
-            foreach (var product in filteredProducts) {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
-                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
-                                  $"\n Status: {product.status}");
+            var filteredProducts = marketplace.products.Where(p => p.seller == seller).ToList();
+            if (!filteredProducts.Any())
+            {
+                Console.WriteLine("\nProdavac nema proizvoda");
+                return;
             }
+            DisplayProductDetails(filteredProducts);
         }
 
         public static void ShowAllFavorites(Buyer buyer)
@@ -124,6 +113,16 @@ namespace ConsoleApp1.Domain
             {
                 Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
                                   $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}");
+            }
+        }
+
+        private static void DisplayProductDetails(List<Product> products)
+        {
+            foreach (var product in products)
+            {
+                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price:F2}" +
+                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
+                                  $"\n Status: {product.status}");
             }
         }
 
@@ -162,7 +161,7 @@ namespace ConsoleApp1.Domain
                 productToReturn = ChooseProduct(marketplace);
             }
 
-            double refundAmount = productToReturn.price * 0.8;
+            double refundAmount = CalculateRefundAmount(productToReturn);
 
             BuyerActions.ReturnAmount(buyer,refundAmount);
             SellerActions.DeductSaleIncome(productToReturn.seller, refundAmount, productToReturn.price);
@@ -200,25 +199,44 @@ namespace ConsoleApp1.Domain
                 return;
             }
 
-            marketplace.transactions.Add(new Transaction(product.GetId(), buyer, product.seller));
+            double marketplaceCommission = CalculateMarketplaceCommission(finalPrice);
+            marketplace.totalFunds += marketplaceCommission;
+
+            MarketplaceActions.AddTransaction(marketplace,new Transaction(product.GetId(), buyer, product.seller));
             SellerActions.AddSaleIncome(product.seller, finalPrice);
             BuyerActions.DeductAmount(buyer, finalPrice);
-            marketplace.totalFunds += (finalPrice * 0.05);
             product.status = Data.Status.Prodano;
 
             Console.WriteLine($"\nProizvod: {product.productName}, cijena: {finalPrice}, uspjesno kupljen");
+        }
 
+        private static double CalculateRefundAmount(Product product)
+        {
+            return product.price * 0.8;
+        }
+
+        private static double CalculateMarketplaceCommission(double finalPrice)
+        {
+            return finalPrice * 0.05;
         }
 
         public static void AddProduct(Marketplace marketplace, Seller seller)
         {
-            string productName;
-            string productDescription;
-            double productPrice;
+            var productName = EnterProductName();
+            var productDescription = EnterProductDesc();
+            var productPrice = EnterProductPrice();
+            var productCategory = AssignCategoryBasedOnProductName(productName);
 
+            Product product = new Product(productName, productDescription, productPrice, productCategory, seller);
+            MarketplaceActions.AddProduct(marketplace,product);
+            Console.WriteLine($"\nProizvod: {productName} uspjesno dodan");
+        }
+
+        private static string EnterProductName()
+        {
             Console.WriteLine("\nUnesite naziv proizvoda: ");
             Console.Write("\nUnos: ");
-            productName = Console.ReadLine();
+            var productName = Console.ReadLine().Trim();
 
             while (!FunctionalityFunctions.ValidateProductName(productName))
             {
@@ -226,9 +244,43 @@ namespace ConsoleApp1.Domain
                 productName = Console.ReadLine();
             }
 
+            return productName;
+        }
+
+        private static Category AssignCategoryBasedOnProductName(string productName)
+        {
+            string lowerCaseProductName = productName.ToLower();
+
+            var electronicsKeywords = new[] { "laptop", "monitor", "tipkovnica", "racunalo", "telefon", "tv", "kalkulator", "projektor" };
+            var clothingKeywords = new[] { "majica", "hlače", "pulover", "jakna", "džemper", "suknja", "kaput", "kosulja", "šal" };
+            var booksKeywords = new[] { "knjiga", "roman", "poezija", "novela", "priručnik", "enciklopedija", "biografija" };
+            var furnitureKeywords = new[] { "stolica", "stol", "krevet", "sofa", "ormar", "regal", "polica", "komoda" };
+
+            if (electronicsKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            {
+                return Category.Elektronika;
+            }
+            else if (clothingKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            {
+                return Category.Odjeca;
+            }
+            else if (booksKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            {
+                return Category.Knjige;
+            }
+            else if (furnitureKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            {
+                return Category.Namjestaj;
+            }
+
+            return Category.Elektronika;
+        }
+
+        private static string EnterProductDesc()
+        {
             Console.WriteLine("\nUnesite opis proizvoda: ");
             Console.Write("\nUnos: ");
-            productDescription = Console.ReadLine();
+            var productDescription = Console.ReadLine();
 
             while (!FunctionalityFunctions.ValidateProductDesc(productDescription))
             {
@@ -236,33 +288,34 @@ namespace ConsoleApp1.Domain
                 productDescription = Console.ReadLine();
             }
 
+            return productDescription;
+        }
+
+        private static double EnterProductPrice()
+        {
             Console.WriteLine("\nUnesite cijenu proizvoda: ");
             Console.Write("\nUnos: ");
+            double productPrice;
             string inputPrice = Console.ReadLine();
 
             while (!double.TryParse(inputPrice, out productPrice) || productPrice <= 0)
             {
                 Console.WriteLine("\nNeispravan unos cijene (mora biti pozitivan broj). Pokušajte ponovo.");
                 Console.Write("\nUnos: ");
-                inputPrice = Console.ReadLine(); 
+                inputPrice = Console.ReadLine();
             }
 
-            Product product = new Product(productName, productDescription, productPrice, Category.Elektronika, seller);
-            marketplace.products.Add(product);
-            Console.WriteLine($"\nProizvod: {productName} uspjesno dodan");
+            return productPrice;
         }
 
         public static Product ChooseProduct(Marketplace marketplace) {
-
-            var productId = -1;
 
             while (true)
             {
                 Console.Write("\nUnesite ID proizvoda: ");
                 Console.Write("\nUnos: ");
-                var input = Console.ReadLine();
 
-                if (int.TryParse(input, out productId))
+                if (int.TryParse(Console.ReadLine(), out var productId))
                 {
                     var product = marketplace.products.FirstOrDefault(p => p.GetId() == productId);
 
@@ -270,10 +323,7 @@ namespace ConsoleApp1.Domain
                     {
                         return product;
                     }
-                    else
-                    {
-                        Console.WriteLine("\nProizvod s tim ID-em nije pronađen. Pokušajte ponovo.");
-                    }
+                    Console.WriteLine("\nProizvod s tim ID-em nije pronađen. Pokušajte ponovo.");
                 }
                 else
                 {
