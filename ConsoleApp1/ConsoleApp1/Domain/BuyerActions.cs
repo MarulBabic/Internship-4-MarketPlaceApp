@@ -37,5 +37,15 @@ namespace ConsoleApp1.Domain
             buyer.UpdateBalance(price);
             Console.WriteLine($"\nKupcev racun uvecan je za {price:F2}");
         }
+
+        public static void ShowBuyersBalance(Buyer buyer) {
+            if (buyer == null)
+            {
+                Console.WriteLine("\nKupac ne postoji.");
+                return;
+            }
+
+            Console.WriteLine($"\nStanje na racunu kupca {buyer.name}: {buyer.balance:F2}");
+        }
     }
 }

@@ -106,11 +106,14 @@ namespace ConsoleApp1.Domain
                     if (transaction.transactionDate >= startDate && transaction.transactionDate <= endDate)
                     {
 
-                        var product = marketplace.products.FirstOrDefault(p => p.GetId() == transaction.productId);
-                        if (product != null)
+                        if (!transaction.isReturnTransaction)
                         {
-                            double sellerEarnings = product.price * 0.95;
+                            double sellerEarnings = transaction.finalPrice * 0.95;
                             totalEarnings += sellerEarnings;
+                        }
+                        else
+                        {
+                            totalEarnings -= transaction.refundAmount;
                         }
                     }
                 }
@@ -128,6 +131,17 @@ namespace ConsoleApp1.Domain
             seller.AddIncome(-refundAmount);
             Console.WriteLine($"\nProdavacev racun umanjen za {refundAmount:F2}.");
             Console.WriteLine($"\nUkupan saldo prodavaca nakon povrata: {seller.GetIncome():F2}");
+        }
+
+        public static void ShowSellersBalance(Seller seller)
+        {
+            if (seller == null)
+            {
+                Console.WriteLine("\nProdavac ne postoji.");
+                return;
+            }
+
+            Console.WriteLine($"\nStanje na racunu kupca {seller.name}: {seller.income:F2}");
         }
     }
 }

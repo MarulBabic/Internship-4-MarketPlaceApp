@@ -26,7 +26,7 @@ namespace ConsoleApp1.Domain
 
             var purchasedProducts = marketplace.transactions
                 .Where(t => t.buyer == buyer)
-                .Select(t => marketplace.products.FirstOrDefault(p => p.GetId() == t.productId && p.status == Data.Status.Prodano))
+                .Select(t => marketplace.products.FirstOrDefault(p => p.GetId() == t.productId))
                 .Where(p => p != null)
                 .Distinct()
                 .ToList();
@@ -52,8 +52,15 @@ namespace ConsoleApp1.Domain
                 return;
             }
 
-            Console.WriteLine($"\nProizvodi prodavača {seller.name} u odabranoj kategoriji:");
-            DisplayProductDetails(products);
+            var filteredProducts = products.Where(p => p.status == Status.Prodano).ToList();
+
+            if (!filteredProducts.Any()) {
+                Console.WriteLine($"\nProdavač {seller.name} nema prodanih proizvoda u odabranoj kategoriji.");
+                return;
+            }
+
+            Console.WriteLine($"\nProdani proizvodi prodavača {seller.name} u odabranoj kategoriji:");
+            DisplayProductDetails(filteredProducts);
         }
 
         public static void ShowProductsByCategory(Marketplace marketplace)
@@ -161,10 +168,26 @@ namespace ConsoleApp1.Domain
                 productToReturn = ChooseProduct(marketplace);
             }
 
-            double refundAmount = CalculateRefundAmount(productToReturn);
+            var transaction = marketplace.transactions.FirstOrDefault(t => t.productId == productToReturn.GetId() && t.buyer == buyer);
+            if (transaction == null)
+            {
+                Console.WriteLine("\nTransakcija nije pronađena.");
+                return;
+            }
 
-            BuyerActions.ReturnAmount(buyer,refundAmount);
-            SellerActions.DeductSaleIncome(productToReturn.seller, refundAmount, productToReturn.price);
+            double finalPrice = transaction.finalPrice;  
+            double refundAmount = finalPrice * 0.8;
+            BuyerActions.ReturnAmount(buyer, refundAmount);
+
+            SellerActions.DeductSaleIncome(productToReturn.seller, refundAmount, finalPrice);
+
+            var returnTransaction = new Transaction(productToReturn.GetId(), buyer, productToReturn.seller)
+            {
+                isReturnTransaction = true,
+                refundAmount = refundAmount,
+                finalPrice = transaction.finalPrice 
+            };
+            marketplace.transactions.Add(returnTransaction);
 
             productToReturn.status = Data.Status.Na_prodaju;
             Console.WriteLine($"\nProizvod '{productToReturn.productName}' je uspješno vraćen.");
@@ -178,7 +201,7 @@ namespace ConsoleApp1.Domain
             var product = ChooseProduct(marketplace);
 
             Console.Write("\nUnesite promotivni kod (ili pritisnite Enter za nastavak bez koda): ");
-            string promoCode = Console.ReadLine();
+            string promoCode = Console.ReadLine().Trim();
 
             double finalPrice = product.price;
 
@@ -202,17 +225,15 @@ namespace ConsoleApp1.Domain
             double marketplaceCommission = CalculateMarketplaceCommission(finalPrice);
             marketplace.totalFunds += marketplaceCommission;
 
-            MarketplaceActions.AddTransaction(marketplace,new Transaction(product.GetId(), buyer, product.seller));
+            var transaction = new Transaction(product.GetId(), buyer, product.seller, promoCode);
+            transaction.finalPrice = finalPrice;
+
+            MarketplaceActions.AddTransaction(marketplace, transaction);
             SellerActions.AddSaleIncome(product.seller, finalPrice);
             BuyerActions.DeductAmount(buyer, finalPrice);
             product.status = Data.Status.Prodano;
 
             Console.WriteLine($"\nProizvod: {product.productName}, cijena: {finalPrice}, uspjesno kupljen");
-        }
-
-        private static double CalculateRefundAmount(Product product)
-        {
-            return product.price * 0.8;
         }
 
         private static double CalculateMarketplaceCommission(double finalPrice)
@@ -251,29 +272,50 @@ namespace ConsoleApp1.Domain
         {
             string lowerCaseProductName = productName.ToLower();
 
-            var electronicsKeywords = new[] { "laptop", "monitor", "tipkovnica", "racunalo", "telefon", "tv", "kalkulator", "projektor" };
-            var clothingKeywords = new[] { "majica", "hlače", "pulover", "jakna", "džemper", "suknja", "kaput", "kosulja", "šal" };
-            var booksKeywords = new[] { "knjiga", "roman", "poezija", "novela", "priručnik", "enciklopedija", "biografija" };
-            var furnitureKeywords = new[] { "stolica", "stol", "krevet", "sofa", "ormar", "regal", "polica", "komoda" };
+            var electronicsKeywords = new[] { "laptop", "monitor", "tipkovnica", "racunalo", "telefon", "tv", "kalkulator", "projektor", "tablet", "slusalice", "kamera" };
+            var clothingKeywords = new[] { "majica", "hlace", "pulover", "jakna", "dzemper", "suknja", "kaput", "kosulja", "sal", "trenerka" };
+            var booksKeywords = new[] { "knjiga", "roman", "poezija", "novela", "prirucnik", "enciklopedija", "biografija", "strip",  };
+            var furnitureKeywords = new[] { "stolica", "stol", "krevet", "kauc", "ormar", "vrata", "polica", "fotelja" };
 
-            if (electronicsKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            if (electronicsKeywords.Any(keyword => lowerCaseProductName.Equals(keyword)))
             {
                 return Category.Elektronika;
             }
-            else if (clothingKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            else if (clothingKeywords.Any(keyword => lowerCaseProductName.Equals(keyword)))
             {
                 return Category.Odjeca;
             }
-            else if (booksKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            else if (booksKeywords.Any(keyword => lowerCaseProductName.Equals(keyword)))
             {
                 return Category.Knjige;
             }
-            else if (furnitureKeywords.Any(keyword => lowerCaseProductName.Contains(keyword)))
+            else if (furnitureKeywords.Any(keyword => lowerCaseProductName.Equals(keyword)))
             {
                 return Category.Namjestaj;
             }
 
-            return Category.Elektronika;
+            Console.WriteLine("\nNismo prepoznali kategoriju za ovaj proizvod. Molimo vas da odaberete kategoriju ručno:\n" +
+                  "1. Elektronika\n" +
+                  "2. Odjeća\n" +
+                  "3. Knjige\n" +
+                  "4. Namještaj");
+            Console.Write("\nOdaberite kategoriju (1-4): ");
+            int categoryChoice = int.Parse(Console.ReadLine());
+
+            switch (categoryChoice)
+            {
+                case 1:
+                    return Category.Elektronika;
+                case 2:
+                    return Category.Odjeca;
+                case 3:
+                    return Category.Knjige;
+                case 4:
+                    return Category.Namjestaj;
+                default:
+                    Console.WriteLine("\nNevažeći unos, postavljena je zadana kategorija: Elektronika.");
+                    return Category.Elektronika;
+            }
         }
 
         private static string EnterProductDesc()

@@ -16,8 +16,8 @@ namespace ConsoleApp1.Presentation
             do
             {
                 Console.WriteLine("\n1 - Pregled svih proizvoda\n2 - Kupnja proizvoda koristeci id proizvoda\n3 - Povratak kupljenog proizvoda" +
-               "\n4 - Dodavanje proizvoda u listu omiljenih\n5 - Pregled povijesti kupljenih proizvoda\n6 - Pregled liste omiljenih proizvoda" + 
-               "\n7 - Povratak na pocetni izbornik");
+               "\n4 - Dodavanje proizvoda u listu omiljenih\n5 - Pregled povijesti kupljenih proizvoda\n6 - Pregled liste omiljenih proizvoda" +
+               "\n7 - Ukupno stanje na racunu\n8 - Povratak na pocetni izbornik");
                 Console.Write("\nUnos: ");
                 int.TryParse(Console.ReadLine(), out option );
                 switch (option)
@@ -41,6 +41,9 @@ namespace ConsoleApp1.Presentation
                         ProductActions.ShowAllFavorites(buyer);
                         break;
                     case 7:
+                        BuyerActions.ShowBuyersBalance(buyer);
+                        break;
+                    case 8:
                         return;
                     default:
                         Console.WriteLine("Pogresan unos, pokusajte ponovo");

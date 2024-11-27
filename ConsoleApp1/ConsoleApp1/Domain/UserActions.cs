@@ -17,7 +17,7 @@ namespace ConsoleApp1.Domain
             Console.WriteLine("\nUnesite ime: ");
             do {
                 Console.Write("\nUnos: ");
-                name = Console.ReadLine();
+                name = Console.ReadLine().Trim();
 
                 if (string.IsNullOrWhiteSpace(name))
                 {

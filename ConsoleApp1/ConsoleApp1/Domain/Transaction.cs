@@ -12,13 +12,21 @@ namespace ConsoleApp1.Domain
         public Buyer buyer { get; set; }
         public Seller seller { get; set; }
         public DateTime transactionDate {  get; set; }
+        public string promoCode;
+        public double finalPrice;
+        public bool isReturnTransaction { get; set; } 
+        public double refundAmount { get; set; }
 
-        public Transaction(int productId, Buyer buyer, Seller seller)
+        public Transaction(int productId, Buyer buyer, Seller seller,string promoCode=null)
         {
             this.productId = productId;
             this.buyer = buyer;
             this.seller = seller;
             transactionDate = DateTime.Now;
+            this.promoCode = promoCode;
+            finalPrice = -1;
+            isReturnTransaction = false; 
+            refundAmount = 0;
         }
     }
 }

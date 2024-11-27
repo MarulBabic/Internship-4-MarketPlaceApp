@@ -10,10 +10,24 @@ namespace ConsoleApp1.Domain
     {
         public static void ViewAllTransactions(Marketplace marketplace)
         {
-            foreach(var transaction in marketplace.transactions)
+            if (marketplace.transactions.Count == 0)
             {
-                Console.WriteLine($"\nId proizvoda: {transaction.productId}, Kupac: {transaction.buyer.name}, Prodavac: {transaction.seller.name}"+
-                    $", Vrijeme transkacije: {transaction.transactionDate}");
+                Console.WriteLine("\nNema transakcija.");
+                return;  
+            }
+
+            foreach (var transaction in marketplace.transactions)
+            {
+                if (transaction.isReturnTransaction)
+                {
+                    Console.WriteLine($"\nId proizvoda: {transaction.productId}, Povrat proizvoda od kupca: {transaction.buyer.name} prodavacu: {transaction.seller.name}" +
+                   $", Vrijeme transkacije: {transaction.transactionDate}");
+                }
+                else
+                {
+                    Console.WriteLine($"\nId proizvoda: {transaction.productId}, Kupac: {transaction.buyer.name}, Prodavac: {transaction.seller.name}" +
+                        $", Vrijeme transkacije: {transaction.transactionDate}");
+                }
             }
         }
     }
