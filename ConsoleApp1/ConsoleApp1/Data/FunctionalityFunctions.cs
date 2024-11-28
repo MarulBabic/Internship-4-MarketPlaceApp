@@ -28,7 +28,7 @@ namespace ConsoleApp1.Data
             while (!isValidDate)
             {
                 Console.Write("\nUnos: ");
-                string input = Console.ReadLine();
+                string input = Console.ReadLine().Trim();
 
                 isValidDate = DateTime.TryParseExact(input, "dd-MM-yyyy",
                                                       System.Globalization.CultureInfo.InvariantCulture,

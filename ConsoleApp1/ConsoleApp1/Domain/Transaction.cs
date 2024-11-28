@@ -28,5 +28,17 @@ namespace ConsoleApp1.Domain
             isReturnTransaction = false; 
             refundAmount = 0;
         }
+
+        public Transaction(int productId, Buyer buyer, Seller seller,DateTime transactionDate, string promoCode = null)
+        {
+            this.productId = productId;
+            this.buyer = buyer;
+            this.seller = seller;
+            this.transactionDate = transactionDate;
+            this.promoCode = promoCode;
+            finalPrice = -1;
+            isReturnTransaction = false;
+            refundAmount = 0;
+        }
     }
 }
