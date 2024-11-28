@@ -21,6 +21,8 @@ namespace ConsoleApp1.Domain
             }
 
             Console.WriteLine($"\nProdavac uspjesno registriran!\n\n Ime: {sellerName}\n Email: {sellerEmail}\n");
+            Console.WriteLine("\nPritisnite bilo koju tipku za nastavak kao prodavac...");
+            Console.ReadKey();
             return new Seller(sellerName, sellerEmail);
         }
 

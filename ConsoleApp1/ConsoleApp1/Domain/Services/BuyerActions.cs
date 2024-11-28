@@ -23,6 +23,8 @@ namespace ConsoleApp1.Domain
             var balance = FunctionalityFunctions.CheckIfIsValidBalance();
 
             Console.WriteLine($"\nKupac uspjesno registriran!\n\n Ime: {buyerName}\n Email: {buyerEmail}\n Pocetno stanje: {balance:F2}\n");
+            Console.WriteLine("\nPritisnite bilo koju tipku za nastavak kao kupac...");
+            Console.ReadKey();
             return new Buyer(buyerName,buyerEmail, balance);
         }
 
