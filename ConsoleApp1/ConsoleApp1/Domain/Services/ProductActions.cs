@@ -227,6 +227,9 @@ namespace ConsoleApp1.Domain
 
             ShowAllAvailableProducts(marketplace);
 
+            Console.WriteLine("\n -> Iskoristite kupone Fall2024 koji vrijedi do 12-12-2024 za 15% popusta na elektroniku" +
+                            "\n   i Winter2025 koji vrijedi do 12-02-2025 za 20% popusta na knjige");
+
             var product = ChooseProduct(marketplace);
 
             while (product.status == Status.Prodano) {

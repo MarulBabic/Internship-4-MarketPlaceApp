@@ -30,7 +30,7 @@ namespace ConsoleApp1.Data
             Product product5 = new Product("tablet", "10'' ekran, 64GB", 900, Data.Category.Elektronika, seller2);
             Product product6 = new Product("projektor", "Full HD projektor", 1500, Data.Category.Elektronika, seller3);
 
-            Product product7 = new Product("majica", "Pamučna majica", 50, Data.Category.Odjeca, seller3);
+            Product product7 = new Product("majica", "Pamucna majica", 50, Data.Category.Odjeca, seller3);
             Product product8 = new Product("jakna", "Zimska jakna", 300, Data.Category.Odjeca, seller2);
             Product product9 = new Product("trenerka", "Sportska trenerka", 120, Data.Category.Odjeca, seller1);
 
