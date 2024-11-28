@@ -61,10 +61,11 @@ namespace ConsoleApp1.Domain
             while (!double.TryParse(Console.ReadLine(), out newPrice) || newPrice <= 0)
             {
                 Console.WriteLine("\nNeispravna cijena. Unesite pozitivan broj.");
+                Console.Write("\nUnos: ");
             }
 
             selectedProduct.SetPrice(newPrice);
-            Console.WriteLine($"Cijena proizvoda '{selectedProduct.productName}' uspješno promijenjena na {newPrice:F2}.");
+            Console.WriteLine($"\nCijena proizvoda '{selectedProduct.productName}' uspješno promijenjena na {newPrice:F2}.");
         }
 
         public static void ShowTotalSalesIncome(Seller seller) {
@@ -81,20 +82,20 @@ namespace ConsoleApp1.Domain
         public static void ShowTotalSalesInTimePeriod(Marketplace marketplace, Seller seller) {
 
             DateTime startDate;
-            bool validStartDate = FunctionalityFunctions.GetDateFromUser(out startDate);
+            bool validStartDate = FunctionalityFunctions.GetDateFromUser(out startDate,true);
             while (!validStartDate)
             {
                 Console.WriteLine("\nNeispravan pocetni datum.");
-                validStartDate = FunctionalityFunctions.GetDateFromUser(out startDate);
+                validStartDate = FunctionalityFunctions.GetDateFromUser(out startDate,true);
             }
 
             
             DateTime endDate;
-            bool validEndDate = FunctionalityFunctions.GetDateFromUser(out endDate);
+            bool validEndDate = FunctionalityFunctions.GetDateFromUser(out endDate,false);
             while (!validEndDate || startDate > endDate)
             {
                 Console.WriteLine("\nNeispravan zavrsni datum.");
-                validEndDate = FunctionalityFunctions.GetDateFromUser(out endDate);
+                validEndDate = FunctionalityFunctions.GetDateFromUser(out endDate,false);
             }
 
 
@@ -119,7 +120,7 @@ namespace ConsoleApp1.Domain
                 }
             }
 
-            Console.WriteLine($"Ukupna zarada prodavaca {seller.name} između {startDate:dd.MM.yyyy.} i {endDate:dd.MM.yyyy.} je: {totalEarnings:F2}");
+            Console.WriteLine($"\nUkupna zarada prodavaca {seller.name} između {startDate:dd.MM.yyyy.} i {endDate:dd.MM.yyyy.} je: {totalEarnings:F2}");
         }
 
         public static void DeductSaleIncome(Seller seller, double refundAmount, double totalPrice)

@@ -12,13 +12,19 @@ namespace ConsoleApp1.Data
     public class FunctionalityFunctions
     {
 
-        public static bool GetDateFromUser(out DateTime date)
+        public static bool GetDateFromUser(out DateTime date,bool isStart)
         {
             date = DateTime.MinValue;
 
             bool isValidDate = false;
-
-            Console.WriteLine("\nUnesite datum (dd-MM-yyyy): ");
+            if (isStart)
+            {
+                Console.WriteLine("\nUnesite pocetni datum (dd-MM-yyyy): ");
+            }
+            else
+            {
+                Console.WriteLine("\nUnesite zavrsni datum (dd-MM-yyyy): ");
+            }
             while (!isValidDate)
             {
                 Console.Write("\nUnos: ");

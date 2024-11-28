@@ -161,9 +161,38 @@ namespace ConsoleApp1.Domain
 
             var productToReturn = ChooseProduct(marketplace);
 
-            while(productToReturn == null || productToReturn.status != Data.Status.Prodano)
+            var choice = 'c';
+
+
+            while (choice != 'q')
             {
-                Console.WriteLine("\nNeispravan unos ili proizvod nije kupljen.");
+                bool isAlreadyReturned = marketplace.transactions.Any(t => t.productId == productToReturn?.GetId() && t.isReturnTransaction);
+                bool isInvalidProduct = productToReturn == null || productToReturn.status != Data.Status.Prodano;
+
+                if (isAlreadyReturned)
+                {
+                    Console.WriteLine("\nOvaj proizvod je već vraćen. Povrat nije moguć.");
+                }
+                else if (isInvalidProduct)
+                {
+                    Console.WriteLine("\nNeispravan unos ili proizvod nije kupljen.");
+                }
+                else
+                {
+                    break; 
+                }
+
+                Console.WriteLine("Za prekid radnje unesite 'q', a za nastavak pritisnite bilo koju drugu tipku.");
+                Console.Write("\nUnos: ");
+                choice = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+
+                if (choice == 'q')
+                {
+                    Console.WriteLine("\nRadnja je prekinuta.");
+                    return;
+                }
+
                 ShowAllPurchasedProducts(marketplace, buyer);
                 productToReturn = ChooseProduct(marketplace);
             }
@@ -199,6 +228,11 @@ namespace ConsoleApp1.Domain
             ShowAllAvailableProducts(marketplace);
 
             var product = ChooseProduct(marketplace);
+
+            while (product.status == Status.Prodano) {
+                Console.WriteLine("\nProizvod je vec kupljen, pokusajte sa drugim");
+                product = ChooseProduct(marketplace);
+            }
 
             Console.Write("\nUnesite promotivni kod (ili pritisnite Enter za nastavak bez koda): ");
             string promoCode = Console.ReadLine().Trim();
@@ -274,7 +308,7 @@ namespace ConsoleApp1.Domain
 
             var electronicsKeywords = new[] { "laptop", "monitor", "tipkovnica", "racunalo", "telefon", "tv", "kalkulator", "projektor", "tablet", "slusalice", "kamera" };
             var clothingKeywords = new[] { "majica", "hlace", "pulover", "jakna", "dzemper", "suknja", "kaput", "kosulja", "sal", "trenerka" };
-            var booksKeywords = new[] { "knjiga", "roman", "poezija", "novela", "prirucnik", "enciklopedija", "biografija", "strip",  };
+            var booksKeywords = new[] { "knjiga", "roman", "poezija", "novela", "prirucnik", "enciklopedija", "biografija", "strip"};
             var furnitureKeywords = new[] { "stolica", "stol", "krevet", "kauc", "ormar", "vrata", "polica", "fotelja" };
 
             if (electronicsKeywords.Any(keyword => lowerCaseProductName.Equals(keyword)))

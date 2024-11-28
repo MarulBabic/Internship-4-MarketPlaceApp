@@ -26,6 +26,12 @@ namespace ConsoleApp1.Domain
                 return AskIfUserWantsToBuyOldPrice(product);
             }
 
+            if (!promoCode.IsApplicableToCategory(product.category))
+            {
+                Console.WriteLine("\nPromo kod nije primjenjiv na kategoriju ovog proizvoda.");
+                return AskIfUserWantsToBuyOldPrice(product);
+            }
+
             double discount = product.price * (promoCode.discountPercentage / 100);
             double discountedPrice = product.price - discount;
 

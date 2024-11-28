@@ -14,6 +14,7 @@ namespace ConsoleApp1.Presentation
             var option = 0;
             do
             {
+                Console.Clear();
                 Console.WriteLine("\n1 - Dodajte proizvod\n2 - Pregled svih proizvoda od prodavaca\n3 - Pregled ukupne zarade" +
                     "\n4 - Pregled prodanih proizvoda po kategoriji\n5 - Pregled zarade u odredenom vremenskom razdoblju\n6 - Promjena cijene proizvoda" +
                     "\n7 - Ukupno stanje na racunu\n8 - Povratak na pocetni izbornik");
@@ -49,6 +50,8 @@ namespace ConsoleApp1.Presentation
                         Console.WriteLine("\nPogresan unos, pokusajte ponovno");
                         break;
                 }
+                Console.WriteLine("\nPritisnite bilo koju tipku za nastavak...");
+                Console.ReadKey();
             } while (true);
         }
     }

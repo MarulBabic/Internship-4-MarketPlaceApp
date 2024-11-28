@@ -16,6 +16,7 @@ namespace ConsoleApp1.Presentation
 
             do
             {
+                Console.Clear();
                 Console.WriteLine("\n1 - Registracija novog korisnika\n2 - Prijava vec postojeceg korisnika\n3 - Prikaz svih transakcija" +
                "\n4 - Prikaz proizvoda po kategoriji\n5 - Izlaz iz aplikacije");
                 Console.Write("\nUnos: ");
@@ -40,6 +41,8 @@ namespace ConsoleApp1.Presentation
                         Console.WriteLine("Pogresan unos, pokusajte ponovo");
                         break;
                 }
+                Console.WriteLine("\nPritisnite bilo koju tipku za nastavak...");
+                Console.ReadKey();
 
             } while (true);
 

@@ -1,4 +1,5 @@
-﻿using ConsoleApp1.Domain;
+﻿using ConsoleApp1.Data;
+using ConsoleApp1.Domain;
 using ConsoleApp1.Presentation;
 
 namespace ConsoleApp1
@@ -26,9 +27,9 @@ namespace ConsoleApp1
             marketplace.products.Add(product2);
             marketplace.products.Add(product3);
 
-            PromoCode promo1 = new PromoCode("Fall2024", 15.0, DateTime.ParseExact("12-12-2024", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture));
-            PromoCode promo2 = new PromoCode("Winter2025", 20.0, DateTime.ParseExact("12-02-2025", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture));
-            PromoCode promo3 = new PromoCode("Summer2024", 25.0, DateTime.ParseExact("12-09-2024", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture));
+            PromoCode promo1 = new PromoCode("Fall2024", 15.0, DateTime.ParseExact("12-12-2024", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture), new List<Category> { Category.Elektronika});
+            PromoCode promo2 = new PromoCode("Winter2025", 20.0, DateTime.ParseExact("12-02-2025", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture), new List<Category> { Category.Knjige });
+            PromoCode promo3 = new PromoCode("Summer2024", 25.0, DateTime.ParseExact("12-09-2024", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture), new List<Category> { Category.Knjige, Category.Odjeca });
 
             MarketplaceActions.AddPromoCode(marketplace,promo1);
             MarketplaceActions.AddPromoCode(marketplace, promo2);
