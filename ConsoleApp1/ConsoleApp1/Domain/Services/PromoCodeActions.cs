@@ -11,7 +11,7 @@ namespace ConsoleApp1.Domain
 
         public static double ApplyPromotionalCode(Product product, string code,Marketplace marketplace)
         {
-            var promoCode = marketplace.PromoCodes.FirstOrDefault(p => p.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
+            var promoCode = marketplace.PromoCodes.FirstOrDefault(p => p.Code.Equals(code));
 
             if (promoCode == null)
             {
