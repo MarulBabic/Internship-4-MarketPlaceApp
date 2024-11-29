@@ -165,19 +165,19 @@ namespace ConsoleApp1.Data
 
         public static Buyer CheckIfIsBuyer(Marketplace marketplace, string email) {
 
-            return marketplace.buyers.FirstOrDefault(buyer => buyer.email == email);
+            return marketplace.Buyers.FirstOrDefault(buyer => buyer.Email == email);
         }
 
         public static Seller CheckIfIsSeller(Marketplace marketplace, string email)
         {
-            return marketplace.sellers.FirstOrDefault(seller => seller.email == email);
+            return marketplace.Sellers.FirstOrDefault(seller => seller.Email == email);
         }
 
         public static bool CheckIfEmailAlreadyExists(string email, Marketplace marketplace) {
 
-            bool emailExistsAsBuyer = marketplace.buyers.Any(buyer => buyer.email == email);
+            bool emailExistsAsBuyer = marketplace.Buyers.Any(buyer => buyer.Email == email);
 
-            bool emailExistsAsSeller = marketplace.sellers.Any(seller => seller.email == email);
+            bool emailExistsAsSeller = marketplace.Sellers.Any(seller => seller.Email == email);
 
             return emailExistsAsBuyer || emailExistsAsSeller;
         }

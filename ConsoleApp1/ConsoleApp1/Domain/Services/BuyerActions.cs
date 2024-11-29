@@ -47,7 +47,7 @@ namespace ConsoleApp1.Domain
                 return;
             }
 
-            Console.WriteLine($"\nStanje na racunu kupca {buyer.name}: {buyer.balance:F2}");
+            Console.WriteLine($"\nStanje na racunu kupca {buyer.Name}: {buyer.Balance:F2}");
         }
     }
 }

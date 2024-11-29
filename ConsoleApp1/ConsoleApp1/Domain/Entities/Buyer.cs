@@ -8,29 +8,29 @@ namespace ConsoleApp1.Domain
 {
     public class Buyer : User
     {
-        public double balance { get; private set; }
-        public List<Product> favorites { get; private set; }
+        public double Balance { get; private set; }
+        public List<Product> Favorites { get; private set; }
         public Buyer(string name, string email, double balance) : base(name, email)
         {
-            this.balance = balance;
-            favorites = new List<Product>();
+            Balance = balance;
+            Favorites = new List<Product>();
         }
 
         public void UpdateBalance(double price)
         {
-            balance += price;
+            Balance += price;
         }
 
         public void AddToFavorites(Product product) {
 
-            if (favorites.Contains(product))
+            if (Favorites.Contains(product))
             {
                 Console.WriteLine("\nProizvod je već u listi favorita.");
                 return;
             }
 
-            favorites.Add(product);
-            Console.WriteLine($"\nProizvod '{product.productName}' uspjesno dodan u favorite.");
+            Favorites.Add(product);
+            Console.WriteLine($"\nProizvod '{product.ProductName}' uspjesno dodan u favorite.");
         }
 
     }

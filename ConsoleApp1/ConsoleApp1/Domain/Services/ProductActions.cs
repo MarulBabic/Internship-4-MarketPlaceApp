@@ -11,7 +11,7 @@ namespace ConsoleApp1.Domain
     {
         public static void ShowAllAvailableProducts(Marketplace marketplace)
         {
-            var availableProducts = marketplace.products.Where(p => p.status == Data.Status.Na_prodaju).ToList();
+            var availableProducts = marketplace.Products.Where(p => p.Status == Data.Status.Na_prodaju).ToList();
 
             if (!availableProducts.Any())
             {
@@ -24,9 +24,9 @@ namespace ConsoleApp1.Domain
         public static bool ShowAllPurchasedProducts(Marketplace marketplace, Buyer buyer) {
             Console.WriteLine("\nKupljeni proizvodi:");
 
-            var purchasedProducts = marketplace.transactions
-                .Where(t => t.buyer == buyer)
-                .Select(t => marketplace.products.FirstOrDefault(p => p.GetId() == t.productId))
+            var purchasedProducts = marketplace.Transactions
+                .Where(t => t.Buyer == buyer)
+                .Select(t => marketplace.Products.FirstOrDefault(p => p.GetId() == t.ProductId))
                 .Where(p => p != null)
                 .Distinct()
                 .ToList();
@@ -48,18 +48,18 @@ namespace ConsoleApp1.Domain
 
             if (!products.Any())
             {
-                Console.WriteLine($"\nProdavač {seller.name} nema proizvoda u odabranoj kategoriji.");
+                Console.WriteLine($"\nProdavač {seller.Name} nema proizvoda u odabranoj kategoriji.");
                 return;
             }
 
-            var filteredProducts = products.Where(p => p.status == Status.Prodano).ToList();
+            var filteredProducts = products.Where(p => p.Status == Status.Prodano).ToList();
 
             if (!filteredProducts.Any()) {
-                Console.WriteLine($"\nProdavač {seller.name} nema prodanih proizvoda u odabranoj kategoriji.");
+                Console.WriteLine($"\nProdavač {seller.Name} nema prodanih proizvoda u odabranoj kategoriji.");
                 return;
             }
 
-            Console.WriteLine($"\nProdani proizvodi prodavača {seller.name} u odabranoj kategoriji:");
+            Console.WriteLine($"\nProdani proizvodi prodavača {seller.Name} u odabranoj kategoriji:");
             DisplayProductDetails(filteredProducts);
         }
 
@@ -89,16 +89,16 @@ namespace ConsoleApp1.Domain
                 Console.Write("\nUnos: ");
             }
 
-            return marketplace.products
-                .Where(p => p.category == selectedCategory && (seller == null || p.seller == seller))
+            return marketplace.Products
+                .Where(p => p.Category == selectedCategory && (seller == null || p.Seller == seller))
                 .ToList();
         }
 
         public static void ShowAllProductsOfSeller(Marketplace marketplace, Seller seller) {
-            Console.WriteLine($"\nProizvodi od prodavaca {seller.name}:");
+            Console.WriteLine($"\nProizvodi od prodavaca {seller.Name}:");
 
 
-            var filteredProducts = marketplace.products.Where(p => p.seller == seller).ToList();
+            var filteredProducts = marketplace.Products.Where(p => p.Seller == seller).ToList();
             if (!filteredProducts.Any())
             {
                 Console.WriteLine("\nProdavac nema proizvoda");
@@ -109,17 +109,17 @@ namespace ConsoleApp1.Domain
 
         public static void ShowAllFavorites(Buyer buyer)
         {
-            if (!buyer.favorites.Any())
+            if (!buyer.Favorites.Any())
             {
                 Console.WriteLine("\nLista favorita je prazna.");
                 return;
             }
 
             Console.WriteLine("\nVasi omiljeni proizvodi:");
-            foreach (var product in buyer.favorites)
+            foreach (var product in buyer.Favorites)
             {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price}" +
-                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}");
+                Console.WriteLine($"\n Naziv proizvoda: {product.ProductName}\n Cijena proizvoda: {product.Price}" +
+                                  $"\n Opis proizvoda: {product.ProductDescription}\n Id proizvoda: {product.GetId()}");
             }
         }
 
@@ -127,9 +127,9 @@ namespace ConsoleApp1.Domain
         {
             foreach (var product in products)
             {
-                Console.WriteLine($"\n Naziv proizvoda: {product.productName}\n Cijena proizvoda: {product.price:F2}" +
-                                  $"\n Opis proizvoda: {product.productDescription}\n Id proizvoda: {product.GetId()}" +
-                                  $"\n Status: {product.status}");
+                Console.WriteLine($"\n Naziv proizvoda: {product.ProductName}\n Cijena proizvoda: {product.Price:F2}" +
+                                  $"\n Opis proizvoda: {product.ProductDescription}\n Id proizvoda: {product.GetId()}" +
+                                  $"\n Status: {product.Status}");
             }
         }
 
@@ -143,7 +143,7 @@ namespace ConsoleApp1.Domain
             Console.WriteLine("\nOdaberite proizvod koji zelite dodati u favorite:");
             var productToAdd = ChooseProduct(marketplace);
 
-            while(productToAdd == null || productToAdd.status != Data.Status.Prodano)
+            while(productToAdd == null || productToAdd.Status != Data.Status.Prodano)
             {
                 Console.WriteLine("\nNe mozete dodati nevazeci proizvod ili proizvod koji nije kupljen u favorite. Pokusajte sa drugim id-em");
                 productToAdd = ChooseProduct(marketplace);
@@ -166,8 +166,8 @@ namespace ConsoleApp1.Domain
 
             while (choice != 'q')
             {
-                bool isAlreadyReturned = marketplace.transactions.Any(t => t.productId == productToReturn?.GetId() && t.isReturnTransaction);
-                bool isInvalidProduct = productToReturn == null || productToReturn.status != Data.Status.Prodano;
+                bool isAlreadyReturned = marketplace.Transactions.Any(t => t.ProductId == productToReturn?.GetId() && t.IsReturnTransaction);
+                bool isInvalidProduct = productToReturn == null || productToReturn.Status != Data.Status.Prodano;
 
                 if (isAlreadyReturned)
                 {
@@ -197,29 +197,29 @@ namespace ConsoleApp1.Domain
                 productToReturn = ChooseProduct(marketplace);
             }
 
-            var transaction = marketplace.transactions.FirstOrDefault(t => t.productId == productToReturn.GetId() && t.buyer == buyer);
+            var transaction = marketplace.Transactions.FirstOrDefault(t => t.ProductId == productToReturn.GetId() && t.Buyer == buyer);
             if (transaction == null)
             {
                 Console.WriteLine("\nTransakcija nije pronađena.");
                 return;
             }
 
-            double finalPrice = transaction.finalPrice;  
+            double finalPrice = transaction.FinalPrice;  
             double refundAmount = finalPrice * 0.8;
             BuyerActions.ReturnAmount(buyer, refundAmount);
 
-            SellerActions.DeductSaleIncome(productToReturn.seller, refundAmount, finalPrice);
+            SellerActions.DeductSaleIncome(productToReturn.Seller, refundAmount, finalPrice);
 
-            var returnTransaction = new Transaction(productToReturn.GetId(), buyer, productToReturn.seller)
+            var returnTransaction = new Transaction(productToReturn.GetId(), buyer, productToReturn.Seller)
             {
-                isReturnTransaction = true,
-                refundAmount = refundAmount,
-                finalPrice = transaction.finalPrice 
+                IsReturnTransaction = true,
+                RefundAmount = refundAmount,
+                FinalPrice = transaction.FinalPrice 
             };
-            marketplace.transactions.Add(returnTransaction);
+            marketplace.Transactions.Add(returnTransaction);
 
-            productToReturn.status = Data.Status.Na_prodaju;
-            Console.WriteLine($"\nProizvod '{productToReturn.productName}' je uspješno vraćen.");
+            productToReturn.Status = Data.Status.Na_prodaju;
+            Console.WriteLine($"\nProizvod '{productToReturn.ProductName}' je uspješno vraćen.");
         }
 
         public static void BuyProduct(Marketplace marketplace, Buyer buyer)
@@ -232,7 +232,7 @@ namespace ConsoleApp1.Domain
 
             var product = ChooseProduct(marketplace);
 
-            while (product.status == Status.Prodano) {
+            while (product.Status == Status.Prodano) {
                 Console.WriteLine("\nProizvod je vec kupljen, pokusajte sa drugim");
                 product = ChooseProduct(marketplace);
             }
@@ -240,7 +240,7 @@ namespace ConsoleApp1.Domain
             Console.Write("\nUnesite promotivni kod (ili pritisnite Enter za nastavak bez koda): ");
             string promoCode = Console.ReadLine().Trim();
 
-            double finalPrice = product.price;
+            double finalPrice = product.Price;
 
             if (!string.IsNullOrWhiteSpace(promoCode))
             {
@@ -253,24 +253,24 @@ namespace ConsoleApp1.Domain
                 return; 
             }
 
-            if (buyer.balance < finalPrice)
+            if (buyer.Balance < finalPrice)
             {
                 Console.WriteLine("\nNemate dovoljno sredstava za kupovinu ovog proizvoda.");
                 return;
             }
 
             double marketplaceCommission = CalculateMarketplaceCommission(finalPrice);
-            marketplace.totalFunds += marketplaceCommission;
+            marketplace.TotalFunds += marketplaceCommission;
 
-            var transaction = new Transaction(product.GetId(), buyer, product.seller, promoCode);
-            transaction.finalPrice = finalPrice;
+            var transaction = new Transaction(product.GetId(), buyer, product.Seller, promoCode);
+            transaction.FinalPrice = finalPrice;
 
             MarketplaceActions.AddTransaction(marketplace, transaction);
-            SellerActions.AddSaleIncome(product.seller, finalPrice);
+            SellerActions.AddSaleIncome(product.Seller, finalPrice);
             BuyerActions.DeductAmount(buyer, finalPrice);
-            product.status = Data.Status.Prodano;
+            product.Status = Data.Status.Prodano;
 
-            Console.WriteLine($"\nProizvod: {product.productName}, cijena: {finalPrice}, uspjesno kupljen");
+            Console.WriteLine($"\nProizvod: {product.ProductName}, cijena: {finalPrice}, uspjesno kupljen");
         }
 
         private static double CalculateMarketplaceCommission(double finalPrice)
@@ -396,7 +396,7 @@ namespace ConsoleApp1.Domain
 
                 if (int.TryParse(Console.ReadLine(), out var productId))
                 {
-                    var product = marketplace.products.FirstOrDefault(p => p.GetId() == productId);
+                    var product = marketplace.Products.FirstOrDefault(p => p.GetId() == productId);
 
                     if (product != null)
                     {

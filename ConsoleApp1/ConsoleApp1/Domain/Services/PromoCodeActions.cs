@@ -11,7 +11,7 @@ namespace ConsoleApp1.Domain
 
         public static double ApplyPromotionalCode(Product product, string code,Marketplace marketplace)
         {
-            var promoCode = marketplace.promoCodes.FirstOrDefault(p => p.code.Equals(code, StringComparison.OrdinalIgnoreCase));
+            var promoCode = marketplace.PromoCodes.FirstOrDefault(p => p.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
 
             if (promoCode == null)
             {
@@ -26,14 +26,14 @@ namespace ConsoleApp1.Domain
                 return AskIfUserWantsToBuyOldPrice(product);
             }
 
-            if (!promoCode.IsApplicableToCategory(product.category))
+            if (!promoCode.IsApplicableToCategory(product.Category))
             {
                 Console.WriteLine("\nPromo kod nije primjenjiv na kategoriju ovog proizvoda.");
                 return AskIfUserWantsToBuyOldPrice(product);
             }
 
-            double discount = product.price * (promoCode.discountPercentage / 100);
-            double discountedPrice = product.price - discount;
+            double discount = product.Price * (promoCode.DiscountPercentage / 100);
+            double discountedPrice = product.Price - discount;
 
             Console.WriteLine($"\nPromo kod uspjesno primjenjen! Nova cijena proizvoda je: {discountedPrice:F2}");
             return discountedPrice;
@@ -52,7 +52,7 @@ namespace ConsoleApp1.Domain
                 if (response == "da")
                 {
                     Console.WriteLine("\nKupit ćete proizvod po staroj cijeni.");
-                    return product.price;
+                    return product.Price;
                 }
                 else if (response == "ne")
                 {

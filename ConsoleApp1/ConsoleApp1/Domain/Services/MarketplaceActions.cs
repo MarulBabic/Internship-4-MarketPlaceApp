@@ -11,42 +11,42 @@ namespace ConsoleApp1.Domain
     {
         public static void AddSeller(Marketplace marketplace,Seller seller)
         {
-            if (marketplace.sellers.Any(s => s.email == seller.email))
+            if (marketplace.Sellers.Any(s => s.Email == seller.Email))
             {
                 Console.WriteLine("\nProdavač s ovim emailom već postoji.");
                 return;
             }
-            marketplace.sellers.Add(seller);
+            marketplace.Sellers.Add(seller);
         }
 
         public static void AddBuyer(Marketplace marketplace,Buyer buyer)
         {
-            if (marketplace.buyers.Any(b => b.email == buyer.email))
+            if (marketplace.Buyers.Any(b => b.Email == buyer.Email))
             {
                 Console.WriteLine("\nKupac s ovim emailom već postoji.");
                 return;
             }
-            marketplace.buyers.Add(buyer);
+            marketplace.Buyers.Add(buyer);
         }
 
         public static void AddProduct(Marketplace marketplace,Product product)
         {
-            if (marketplace.products.Any(p => p.GetId() == product.GetId()))
+            if (marketplace.Products.Any(p => p.GetId() == product.GetId()))
             {
                 Console.WriteLine("\nProizvod s ovim ID-om već postoji.");
                 return;
             }
-            marketplace.products.Add(product);
+            marketplace.Products.Add(product);
         }
 
         public static void AddTransaction(Marketplace marketplace,Transaction transaction)
         {
-            marketplace.transactions.Add(transaction);
+            marketplace.Transactions.Add(transaction);
         }
 
         public static void AddPromoCode(Marketplace marketplace,PromoCode promoCode)
         {
-            marketplace.promoCodes.Add(promoCode);
+            marketplace.PromoCodes.Add(promoCode);
         }
     }
 }

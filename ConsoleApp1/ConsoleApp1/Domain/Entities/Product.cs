@@ -9,35 +9,35 @@ namespace ConsoleApp1.Domain
 {
     public class Product
     {
-        private static int counter = 0;
-        private int id { get; }
-        public string productName { get;  }
-        public string productDescription { get; }
-        public double price { get; protected set; }
-        public Status status { get; set; }
-        public Category category {  get; set; }
-        public Seller seller {  get; protected set; }
+        private static int NextId = 0;
+        private int Id { get; }
+        public string ProductName { get;  }
+        public string ProductDescription { get; }
+        public double Price { get; protected set; }
+        public Status Status { get; set; }
+        public Category Category {  get; set; }
+        public Seller Seller {  get; protected set; }
 
         public Product( string productName, string productDescription, double price, Category category, Seller seller)
         {
-            id = ++counter;
-            this.productName = productName;
-            this.productDescription = productDescription;
-            this.price = price;
-            status = Status.Na_prodaju;
-            this.category = category;
-            this.seller = seller;
+            Id = ++NextId;
+            ProductName = productName;
+            ProductDescription = productDescription;
+            Price = price;
+            Status = Status.Na_prodaju;
+            Category = category;
+            Seller = seller;
             
         }
 
         public int GetId()
         {
-            return id;
+            return Id;
         }
 
         public void SetPrice(double price)
         {
-            this.price = price;
+            this.Price = price;
         }
     }
 }

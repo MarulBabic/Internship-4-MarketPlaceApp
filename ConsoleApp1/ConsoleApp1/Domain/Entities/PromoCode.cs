@@ -9,22 +9,22 @@ namespace ConsoleApp1.Domain
 {
     public class PromoCode
     {
-        public string code { get; }
-        public double discountPercentage { get; }
-        public DateTime expiryDate { get; }
+        public string Code { get; }
+        public double DiscountPercentage { get; }
+        public DateTime ExpiryDate { get; }
         public List<Category> Categories { get; }
 
         public PromoCode(string code, double discountPercentage, DateTime expiryDate, List<Category> categories)
         {
-            this.code = code;
-            this.discountPercentage = discountPercentage;
-            this.expiryDate = expiryDate;
+            Code = code;
+            DiscountPercentage = discountPercentage;
+            ExpiryDate = expiryDate;
             Categories = categories;
         }
 
         public bool IsValid()
         {
-            return DateTime.Now <= expiryDate;
+            return DateTime.Now <= ExpiryDate;
         }
 
         public bool IsApplicableToCategory(Category category)

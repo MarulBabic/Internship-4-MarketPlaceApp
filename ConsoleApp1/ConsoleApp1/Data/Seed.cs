@@ -15,16 +15,16 @@ namespace ConsoleApp1.Data
             Buyer buyer1 = new Buyer("Ana", "ana@gmail.com", 2000);
             Buyer buyer2 = new Buyer("Petar", "petar@gmail.com", 1800);
             Buyer buyer3 = new Buyer("Maja", "maja@gmail.com", 2500);
-            marketplace.buyers.Add(buyer1);
-            marketplace.buyers.Add(buyer2);
-            marketplace.buyers.Add(buyer3);
+            marketplace.Buyers.Add(buyer1);
+            marketplace.Buyers.Add(buyer2);
+            marketplace.Buyers.Add(buyer3);
 
             Seller seller1 = new Seller("Katarina", "katarina@gmail.com");
             Seller seller2 = new Seller("Luka", "luka@gmail.com");
             Seller seller3 = new Seller("Ivana", "ivana@gmail.com");
-            marketplace.sellers.Add(seller1);
-            marketplace.sellers.Add(seller2);
-            marketplace.sellers.Add(seller3);
+            marketplace.Sellers.Add(seller1);
+            marketplace.Sellers.Add(seller2);
+            marketplace.Sellers.Add(seller3);
 
             Product product4 = new Product("monitor", "LCD monitor", 700, Data.Category.Elektronika, seller1);
             Product product5 = new Product("tablet", "10'' ekran, 64GB", 900, Data.Category.Elektronika, seller2);
@@ -42,18 +42,18 @@ namespace ConsoleApp1.Data
             Product product14 = new Product("stolica", "Udobna stolica", 150, Data.Category.Namjestaj, seller3);
             Product product15 = new Product("ormar", "Veliki ormar s ogledalom", 1000, Data.Category.Namjestaj, seller1);
 
-            marketplace.products.Add(product4);
-            marketplace.products.Add(product5);
-            marketplace.products.Add(product6);
-            marketplace.products.Add(product7);
-            marketplace.products.Add(product8);
-            marketplace.products.Add(product9);
-            marketplace.products.Add(product10);
-            marketplace.products.Add(product11);
-            marketplace.products.Add(product12);
-            marketplace.products.Add(product13);
-            marketplace.products.Add(product14);
-            marketplace.products.Add(product15);
+            marketplace.Products.Add(product4);
+            marketplace.Products.Add(product5);
+            marketplace.Products.Add(product6);
+            marketplace.Products.Add(product7);
+            marketplace.Products.Add(product8);
+            marketplace.Products.Add(product9);
+            marketplace.Products.Add(product10);
+            marketplace.Products.Add(product11);
+            marketplace.Products.Add(product12);
+            marketplace.Products.Add(product13);
+            marketplace.Products.Add(product14);
+            marketplace.Products.Add(product15);
 
             PromoCode promo1 = new PromoCode("Fall2024", 15.0, DateTime.ParseExact("12-12-2024", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture), new List<Category> { Category.Elektronika });
             PromoCode promo2 = new PromoCode("Winter2025", 20.0, DateTime.ParseExact("12-02-2025", "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture), new List<Category> { Category.Knjige });

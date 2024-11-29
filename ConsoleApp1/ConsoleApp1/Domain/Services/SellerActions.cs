@@ -29,7 +29,7 @@ namespace ConsoleApp1.Domain
         public static void ChangeProductPrice(Seller seller, Marketplace marketplace)
         {
             Console.WriteLine("\nProizvodi u vlasništvu prodavača:");
-            var sellerProducts = marketplace.products.Where(p => p.seller == seller && p.status == Data.Status.Na_prodaju).ToList();
+            var sellerProducts = marketplace.Products.Where(p => p.Seller == seller && p.Status == Data.Status.Na_prodaju).ToList();
 
             if (!sellerProducts.Any())
             {
@@ -39,23 +39,23 @@ namespace ConsoleApp1.Domain
 
             foreach (var product in sellerProducts)
             {
-                Console.WriteLine($"\nID: {product.GetId()} | Naziv: {product.productName} | Trenutna cijena: {product.price:F2}");
+                Console.WriteLine($"\nID: {product.GetId()} | Naziv: {product.ProductName} | Trenutna cijena: {product.Price:F2}");
             }
 
             Console.WriteLine("\nOdaberite proizvod kojem želite promijeniti cijenu:\n");
             Product selectedProduct = null;
 
-            while (selectedProduct == null || selectedProduct.seller != seller || selectedProduct.status != Data.Status.Na_prodaju)
+            while (selectedProduct == null || selectedProduct.Seller != seller || selectedProduct.Status != Data.Status.Na_prodaju)
             {
                 selectedProduct = ProductActions.ChooseProduct(marketplace);
 
-                if (selectedProduct == null || selectedProduct.seller != seller || selectedProduct.status != Data.Status.Na_prodaju)
+                if (selectedProduct == null || selectedProduct.Seller != seller || selectedProduct.Status != Data.Status.Na_prodaju)
                 {
                     Console.WriteLine("\nNeispravan odabir. Molimo odaberite proizvod iz vašeg vlasništva koji je u prodaji.");
                 }
             }
 
-            Console.WriteLine($"\nOdabrali ste proizvod: {selectedProduct.productName}, trenutna cijena: {selectedProduct.price:F2}");
+            Console.WriteLine($"\nOdabrali ste proizvod: {selectedProduct.ProductName}, trenutna cijena: {selectedProduct.Price:F2}");
             Console.WriteLine("\nUnesite novu cijenu:");
 
             double newPrice;
@@ -67,11 +67,11 @@ namespace ConsoleApp1.Domain
             }
 
             selectedProduct.SetPrice(newPrice);
-            Console.WriteLine($"\nCijena proizvoda '{selectedProduct.productName}' uspješno promijenjena na {newPrice:F2}.");
+            Console.WriteLine($"\nCijena proizvoda '{selectedProduct.ProductName}' uspješno promijenjena na {newPrice:F2}.");
         }
 
         public static void ShowTotalSalesIncome(Seller seller) {
-            Console.WriteLine($"\nUkupna zarada od prodaje za prodavaca {seller.name} iznosi: {seller.GetIncome():F2}");
+            Console.WriteLine($"\nUkupna zarada od prodaje za prodavaca {seller.Name} iznosi: {seller.GetIncome():F2}");
         }
         public static void AddSaleIncome(Seller seller,double price)
         {
@@ -102,27 +102,27 @@ namespace ConsoleApp1.Domain
 
 
             double totalEarnings = 0;
-            foreach (var transaction in marketplace.transactions)
+            foreach (var transaction in marketplace.Transactions)
             {
-                if (transaction.seller == seller)
+                if (transaction.Seller == seller)
                 {
-                    if (transaction.transactionDate >= startDate && transaction.transactionDate <= endDate)
+                    if (transaction.TransactionDate >= startDate && transaction.TransactionDate <= endDate)
                     {
 
-                        if (!transaction.isReturnTransaction)
+                        if (!transaction.IsReturnTransaction)
                         {
-                            double sellerEarnings = transaction.finalPrice * 0.95;
+                            double sellerEarnings = transaction.FinalPrice * 0.95;
                             totalEarnings += sellerEarnings;
                         }
                         else
                         {
-                            totalEarnings -= transaction.refundAmount;
+                            totalEarnings -= transaction.RefundAmount;
                         }
                     }
                 }
             }
 
-            Console.WriteLine($"\nUkupna zarada prodavaca {seller.name} između {startDate:dd.MM.yyyy.} i {endDate:dd.MM.yyyy.} je: {totalEarnings:F2}");
+            Console.WriteLine($"\nUkupna zarada prodavaca {seller.Name} između {startDate:dd.MM.yyyy.} i {endDate:dd.MM.yyyy.} je: {totalEarnings:F2}");
         }
 
         public static void DeductSaleIncome(Seller seller, double refundAmount, double totalPrice)
@@ -144,7 +144,7 @@ namespace ConsoleApp1.Domain
                 return;
             }
 
-            Console.WriteLine($"\nStanje na racunu kupca {seller.name}: {seller.income:F2}");
+            Console.WriteLine($"\nStanje na racunu kupca {seller.Name}: {seller.Income:F2}");
         }
     }
 }
